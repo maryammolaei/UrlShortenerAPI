@@ -13,33 +13,33 @@ namespace UrlShortener.Service.Repositories
             _DbSet = _Context.Set<T>();
         }
 
-        public async Task<bool> Add(T entity)
+        public virtual async Task<bool> Add(T entity)
         {
             try
             {
                 await _DbSet.AddAsync(entity);
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                return false;
             }
         }
 
-        public async Task<bool> Delete(T entity)
+        public virtual async Task<bool> Delete(T entity)
         {
             try
             {
                 _DbSet.Remove(entity);
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                return false;
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
             return await _DbSet.ToListAsync();
         }
@@ -49,7 +49,7 @@ namespace UrlShortener.Service.Repositories
             return await _DbSet.FindAsync(id);
         }
 
-        public async Task<bool> Update(T entity)
+        public virtual async Task<bool> Update(T entity)
         {
             try
             {
@@ -58,8 +58,7 @@ namespace UrlShortener.Service.Repositories
             }
             catch (Exception)
             {
-
-                throw;
+                return false;
             }
         }
     }
