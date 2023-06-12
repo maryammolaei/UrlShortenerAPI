@@ -1,8 +1,7 @@
 ﻿namespace UrlShortener.Models
 {
-    public class UrlManagement
+    public class UrlManagement: BaseEntity
     {
-        public int Id { get; set; }
         public string Url { get; set; } = string.Empty;
         public string ShortUrl { get; set; } = string.Empty;
     }

@@ -20,15 +20,25 @@ namespace UrlShortener.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string url)
+        public async Task<IActionResult> Create(string url)
         {
             if (!url.IsValidUrl())
                 return BadRequest("Url is Invalid");
-            var urlManagement = new UrlManagement { Url = url };
-            urlManagement.ShortUrl = UrlShortenerHelper.Encode(urlManagement.Id);
-            _unitOfWork.UrlShortenerRepository.Add(urlManagement);
-            _unitOfWork.Commit();
-            return Ok(urlManagement.ShortUrl);
+
+            int id = await _unitOfWork.UrlShortenerRepository.GetMaxId();
+            var shortUrl = UrlShortenerHelper.Encode(id++);
+
+            var result = await _unitOfWork.UrlShortenerRepository.AddUrl(new UrlManagement { Url = url, ShortUrl = shortUrl });
+            await _unitOfWork.Commit();
+
+            if (!result.isSucceeded)
+                return BadRequest("Error has occurred");
+
+            if(!result.shortUrl.IsNullOrEmpty())
+                return Ok(result.shortUrl);
+
+            return Ok(shortUrl);
         }
+
     }
 }

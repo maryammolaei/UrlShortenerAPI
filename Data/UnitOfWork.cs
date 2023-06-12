@@ -13,9 +13,16 @@ namespace UrlShortener.Data
             _context = context;
             UrlShortenerRepository = new UrlShortenerRepository(_context);
         }
-        public async Task Commit()
+        public async Task<bool> Commit()
         {
-            await _context.SaveChangesAsync();
+            try
+            {
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex) 
+            {
+                return false;
+            }
 
         }
     }

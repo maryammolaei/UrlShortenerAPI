@@ -3,6 +3,6 @@
     public interface IUnitOfWork
     {
         IUrlShortenerRepository UrlShortenerRepository { get; }
-        Task Commit();
+        Task<bool> Commit();
     }
 }

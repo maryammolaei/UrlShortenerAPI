@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
 using UrlShortener.Data;
+using UrlShortener.Models;
 
 namespace UrlShortener.Service.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected UrlShortenetContext _Context;
         protected DbSet<T> _DbSet;
@@ -23,6 +25,7 @@ namespace UrlShortener.Service.Repositories
             catch (Exception e)
             {
                 return false;
+
             }
         }
 
@@ -44,7 +47,7 @@ namespace UrlShortener.Service.Repositories
             return await _DbSet.ToListAsync();
         }
 
-        public async Task<T?> GetById(int id)
+        public virtual async Task<T?> Get(int id)
         {
             return await _DbSet.FindAsync(id);
         }
@@ -61,5 +64,7 @@ namespace UrlShortener.Service.Repositories
                 return false;
             }
         }
+
+        public async Task<int> GetMaxId() => await _DbSet.MaxAsync(e => e.Id);
     }
 }
