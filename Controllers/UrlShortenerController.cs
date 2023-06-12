@@ -39,6 +39,15 @@ namespace UrlShortener.Controllers
 
             return Ok(shortUrl);
         }
+        [HttpGet]
+        public async Task<IActionResult> RedirectTo(string shortUrl)
+        {
+            if (shortUrl.IsNullOrEmpty()) return NotFound();
+            string longUrl = await _unitOfWork.UrlShortenerRepository.GetLongUrl(shortUrl);
+            if (longUrl.IsNullOrEmpty())
+                return NotFound("Url Not Found");
+            return Redirect(longUrl.Trim());
+        }
 
     }
 }

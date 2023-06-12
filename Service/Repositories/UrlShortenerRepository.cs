@@ -12,7 +12,7 @@ namespace UrlShortener.Service.Repositories
 
         public async Task<string> GetLongUrl(string shortUrl)
         { 
-            var shortUrlEntity = await _DbSet.FirstOrDefaultAsync(s => s.ShortUrl.Trim() == shortUrl.Trim());
+            var shortUrlEntity = await _DbSet.FirstOrDefaultAsync(s => s.ShortUrl.Trim().Equals(shortUrl.Trim()));
             return shortUrlEntity?.Url;
         }
 
