@@ -10,5 +10,6 @@ namespace UrlShortener.Utility.Extensions
             Uri urlOrigin;
             return Uri.TryCreate(url, UriKind.Absolute, out urlOrigin);
         }
+
     }
 }

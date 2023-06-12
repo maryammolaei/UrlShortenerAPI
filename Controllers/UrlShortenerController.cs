@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using UrlShortener.Models;
 using UrlShortener.Service;
+using UrlShortener.Utility;
+using UrlShortener.Utility.Extensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,36 +18,16 @@ namespace UrlShortener.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        // GET: api/<UrlShortenerController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+
+        [HttpPost]
+        public IActionResult Create(string url)
         {
-            return new string[] { "value1", "value2" };
+            if (!url.IsValidUrl())
+                return BadRequest("Url is Invalid");
+            var urlManagement = new UrlManagement { Url = url };
+            urlManagement.ShortUrl = UrlShortenerHelper.Encode(urlManagement.Id);
+            _unitOfWork.UrlShortenerRepository.Add(urlManagement);
+            return Ok(urlManagement.ShortUrl);
         }
-
-        // GET api/<UrlShortenerController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        //// POST api/<UrlShortenerController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //// PUT api/<UrlShortenerController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<UrlShortenerController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
