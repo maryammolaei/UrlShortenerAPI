@@ -27,6 +27,7 @@ namespace UrlShortener.Controllers
             var urlManagement = new UrlManagement { Url = url };
             urlManagement.ShortUrl = UrlShortenerHelper.Encode(urlManagement.Id);
             _unitOfWork.UrlShortenerRepository.Add(urlManagement);
+            _unitOfWork.Commit();
             return Ok(urlManagement.ShortUrl);
         }
     }
