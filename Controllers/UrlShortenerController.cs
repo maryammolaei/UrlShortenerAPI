@@ -25,8 +25,8 @@ namespace UrlShortener.Controllers
             if (!url.IsValidUrl())
                 return BadRequest("Url is Invalid");
 
-            int id = await _unitOfWork.UrlShortenerRepository.GetMaxId();
-            var shortUrl = UrlShortenerHelper.Encode(id++);
+            int maxId = await _unitOfWork.UrlShortenerRepository.GetMaxId() + 1;
+            var shortUrl = UrlShortenerHelper.Encode(maxId);
 
             var result = await _unitOfWork.UrlShortenerRepository.AddUrl(new UrlManagement { Url = url, ShortUrl = shortUrl });
             await _unitOfWork.Commit();
@@ -34,10 +34,7 @@ namespace UrlShortener.Controllers
             if (!result.isSucceeded)
                 return BadRequest("Error has occurred");
 
-            if(!result.shortUrl.IsNullOrEmpty())
-                return Ok(result.shortUrl);
-
-            return Ok(shortUrl);
+            return Ok(result.shortUrl.IsNullOrEmpty() ? shortUrl : result.shortUrl);
         }
         [HttpGet]
         public async Task<IActionResult> RedirectTo(string shortUrl)

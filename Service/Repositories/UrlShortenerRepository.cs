@@ -25,7 +25,7 @@ namespace UrlShortener.Service.Repositories
         {
             UrlManagement urlManagement = await GetByUrl(entity.Url);
             if (urlManagement != null)
-                return (true, urlManagement?.ShortUrl);
+                return (true, urlManagement.ShortUrl);
             try
             {
                 await _DbSet.AddAsync(entity);
